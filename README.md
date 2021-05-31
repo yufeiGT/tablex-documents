@@ -77,48 +77,48 @@ Vue.use(tablex, {
     store: null,
     // 请求配置
     request: {
-            // 接口地图
-            map: {},
-            // axios 配置
-            axios: {
-                authorizationKey: 'Authorization',
-                // 全局配置
-                defaults: {
-                        // 请求超时毫秒数
-                        timeout: 1000 * 5,
-                        // 跨域请求是否需要使用凭证
-                        withCredentials: true,
-                        // 请求头配置
-                        headers: {
-                                'Content-Type': 'application/json;charset=UTF-8',
-                        },
-                },
-                // 自定义拦截处理回调
-                interceptors: {
-                        request: [],
-                        response: [],
+        // 接口地图
+        map: {},
+        // axios 配置
+        axios: {
+            authorizationKey: 'Authorization',
+            // 全局配置
+            defaults: {
+                // 请求超时毫秒数
+                timeout: 1000 * 5,
+                // 跨域请求是否需要使用凭证
+                withCredentials: true,
+                // 请求头配置
+                headers: {
+                    'Content-Type': 'application/json;charset=UTF-8',
                 },
             },
+            // 自定义拦截处理回调
+            interceptors: {
+                request: [],
+                response: [],
+            },
+        },
     },
     table: {
-            // 全局请求参数格式化回调
-            requestFormat: null,
-            // 全局响应数据格式化回调
-            responseFormat: null,
-            // 全局删除请求参数格式化回调
-            deleteRequestFormat: null,
-            // 删除
-            delete: {
-                    // 参数键
-                    key: 'id',
-                    // 获取参数值的键
-                    paramKey: 'id',
-            },
-            // 分页
-            paging: {
-                    // 分页参数格式化回调
-                    paramsFormat: null,
-            },
+        // 全局请求参数格式化回调
+        requestFormat: null,
+        // 全局响应数据格式化回调
+        responseFormat: null,
+        // 全局删除请求参数格式化回调
+        deleteRequestFormat: null,
+        // 删除
+        delete: {
+            // 参数键
+            key: 'id',
+            // 获取参数值的键
+            paramKey: 'id',
+        },
+        // 分页
+        paging: {
+            // 分页参数格式化回调
+            paramsFormat: null,
+        },
     },
 })
 ```
@@ -126,5 +126,72 @@ Vue.use(tablex, {
 ----
 
 ##### request.map 接口地图
+
+> 格式为 JSON，接口集合可无限递归
+
+* 格式
+
+```javascript
+{
+    接口名称：'请求方式，GET / POST',
+    // 如 POST ： http://XXXX/login
+    login: 'post',
+    
+    自定义接口函数名称： ['请求方式，GET / POST', '接口名称'],
+    // 如 POST ：http://XXXX/login
+    // 自定义接口函数名为 Login
+    Login: ['post', 'login'],
+    
+    接口集合名(以开头的名称命名)：{},
+    // 如有以下以 system 开头的接口:
+    // POST：http://XXXX/system/setUser
+    // GET：http://XXXX/system/getUserData
+    system: {
+        setUser: 'post',
+        getUserData: 'get',
+    },
+    
+    接口集合名(不以开头的名称命名)：{},
+    // 如有以下以 system 开头的接口:
+    // POST：http://XXXX/system/setUser
+    // GET：http://XXXX/system/getUserData
+    SystemData: {
+        // 设置默认接口前缀
+        default: 'system',
+        setUser: 'post',
+        getUserData: 'get',
+    },
+}
+```
+
+* 例子
+
+```javascript
+import tablex from '@~crazy/tablex';
+// 配置
+Vue.use(tablex, {
+    request: {
+        map: {
+            // 设置用户数据
+            setUserData: ['get', 'set_user_data'],
+        },
+    },
+});
+
+// 通过 api 属性访问
+// 获取请求实例
+const req = this.$tablex.api.setUserData({
+    // 传递参数
+    nickname: 'admin',
+    
+});
+// 发送请求
+req.send().then(res => {
+    // 请求成功
+});
+
+// 取消请求
+req.cancel();
+```
 
 ----
