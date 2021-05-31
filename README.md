@@ -51,6 +51,9 @@ Vue.$tablex;
 |request.axios|Object|-|Axios 配置|
 |request.axios.authorizationKey|String|Authorization|在请求头携带的 Token 认证名称|
 |request.axios.defaults|Object|-|同 [Axios](http://www.axios-js.com/) 配置|
+|request.axios.defaults.timeout|Number|1000 * 5|请求超时毫秒数|
+|request.axios.defaults.withCredentials|Boolean|true|跨域请求是否需要使用凭证|
+|request.axios.defaults.headers|Object|{ 'Content-Type': 'application/json;charset=UTF-8' }|请求头配置|
 |request.axios.interceptors|Object|-|自定义拦截处理回调|
 |request.axios.interceptors.request|Array[Function]|[]|请求处理回调列表|
 |request.axios.interceptors.response|Array[Function]|[]|响应处理回调列表|
@@ -63,6 +66,62 @@ Vue.$tablex;
 |table.delete.paramKey|String|id|获取参数时数据列的名称|
 |table.paging|Obejct|-|分页配置|
 |table.paging.paramsFormat|Function|-|分页参数格式化回调|
+
+```javascript
+Vue.use(tablex, {
+    // Vue I18n
+    i18n: null,
+    // 国际化语言列表
+    locales: {},
+    // Vue Store
+    store: null,
+    // 请求配置
+    request: {
+            // 接口地图
+            map: {},
+            // axios 配置
+            axios: {
+                authorizationKey: 'Authorization',
+                // 全局配置
+                defaults: {
+                        // 请求超时毫秒数
+                        timeout: 1000 * 5,
+                        // 跨域请求是否需要使用凭证
+                        withCredentials: true,
+                        // 请求头配置
+                        headers: {
+                                'Content-Type': 'application/json;charset=UTF-8',
+                        },
+                },
+                // 自定义拦截处理回调
+                interceptors: {
+                        request: [],
+                        response: [],
+                },
+            },
+    },
+    table: {
+            // 全局请求参数格式化回调
+            requestFormat: null,
+            // 全局响应数据格式化回调
+            responseFormat: null,
+            // 全局删除请求参数格式化回调
+            deleteRequestFormat: null,
+            // 删除
+            delete: {
+                    // 参数键
+                    key: 'id',
+                    // 获取参数值的键
+                    paramKey: 'id',
+            },
+            // 分页
+            paging: {
+                    // 分页参数格式化回调
+                    paramsFormat: null,
+            },
+    },
+})
+```
 
 ----
 
