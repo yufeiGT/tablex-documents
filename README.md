@@ -1,18 +1,18 @@
-#### tablex
+### tablex
 
 > tablex 是一个基于 [Vue](https://cn.vuejs.org/) 、[ELement UI](https://element.eleme.cn/#/zh-CN) 、 [Axios](http://www.axios-js.com/) 实现的一个 table 组件，可根据配置快速实现增删改查业务
 
 ----
 
-##### 安装
+#### 安装
 
 ```javascript
-npm i @~crazy/merge -S
+npm i @~crazy/tablex -S
 ```
 
 ----
 
-##### 使用
+#### 使用
 
 * main.js
 
@@ -29,17 +29,19 @@ Vue.$tablex;
 
 ----
 
-##### tablex 全局属性
+#### tablex 全局属性
 
 |属性名|说明|
 |:-|:-|
 |version|版本号|
 |api|接口对象，根据 request.map 配置生成的接口函数|
 |responseFormat|全局请求响应数据格式化回调|
+|options|配置|
+|type|类型对象|
 
 ----
 
-##### 全局配置
+#### 全局配置
 
 |配置名|类型|默认值|说明|
 |:-|:-|:-|:-|
@@ -125,9 +127,9 @@ Vue.use(tablex, {
 
 ----
 
-##### request.map 接口地图
+#### request.map 接口地图
 
-> 格式为 JSON，接口集合可无限递归
+> 格式为 JSON，接口集合可多层嵌套
 
 * 格式
 
@@ -173,7 +175,7 @@ Vue.use(tablex, {
     request: {
         map: {
             // 设置用户数据
-            setUserData: ['get', 'set_user_data'],
+            setUserData: ['post', 'set_user_data'],
         },
     },
 });
@@ -183,10 +185,12 @@ Vue.use(tablex, {
 const req = this.$tablex.api.setUserData({
     // 传递参数
     nickname: 'admin',
-    
+    address: 'xxxxxx',
 });
 // 发送请求
-req.send().then(res => {
+req.send({
+    // 此处可覆盖参数
+}).then(res => {
     // 请求成功
 });
 
@@ -195,3 +199,73 @@ req.cancel();
 ```
 
 ----
+
+#### 数据类型
+
+> 为了实现各种数据类型在界面上的展示、编辑，在此定义了几种数据类型
+
+##### Type
+
+基类，所有类型均继承此类。目前有以下类：
+
+|类型|继承于|说明|
+|:-|:-|:-|
+|String|Type|字符串|
+|JSON|Type|json 对象，尚未实现|
+|Double|Type|浮点数|
+|Password|String|密码|
+|Date|Type|日期，YYYY-MM-DD HH:mm:ss|
+|Time|Date|时间点，HH:mm:ss|
+|DateRange|Type|时间区间，YYYY-MM-DD HH:mm:ss - YYYY-MM-DD HH:mm:ss|
+|Select|Type|下拉选择器|
+|Radio|Select|单选|
+|Checkbox|Radio|多选|
+
+###### Type 类实例有以下函数：
+
+> 不同类型函数传参有所不同
+
+* constructor 构造函数 & set
+
+|参数|类型|默认值|适用类型|参数顺序|说明|
+|:-|:-|:-|:-|:-|:-|
+|value|Any|-|所有|-|原始数据值，不同类型会根据 value 作出不同的显示方式|
+|formatString|String|YYYY-MM-DD HH:mm:ss|Date|value, formatString|格式化显示方式，不包含编辑状态|
+
+
+
+* getEditor
+
+> 获取类型编辑器，编辑器可修改数据值返回到数据源中。多用于表单提交新增、修改功能
+
+|参数|类型|默认值|适用类型|参数顺序|说明|
+|:-|:-|:-|:-|:-|:-|
+|vue|Vue|-|所有|-|vue 实例对象|
+
+* format
+
+> 格式化数据值，当前无处理
+
+----
+
+
+####  tablex 组件
+
+```html
+<template>
+    <!-- 引用 -->
+    <el-talbex :options="options"></el-talbex>
+</template>
+<script>
+export default {
+    computed: {
+        options: {
+            // tablex 组件配置
+        },
+    },
+};
+</script>
+```
+
+----
+
