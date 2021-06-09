@@ -794,7 +794,7 @@ export default {
 
 |配置名|类型|默认值|说明|
 |:-|:-|:-|:-|
-|method|String/Function|-|此行为调用的服务端接口或自定义回调函数，必要参数，不填报错|
+|method|String/Function|-|此行为调用的服务端接口或自定义回调函数|
 |params|Object|null|调用时附带的参数|
 |before|Function|-|调用前请求参数格式化回调|
 |after|Function|-|调用后响应数据格式化回调|
@@ -831,7 +831,15 @@ export default {
                     list: [{
                         // 更新状态操作按钮
                         key: 'status',
-                        trigger: scope => scope.action('updateStatus', scope, scope.row.id),
+                        trigger: scope => scope.action('updateStatus', scope, {
+                            id: scope.row.id,
+                        }),
+                    }, {
+                        // 查看详情列表操作按钮
+                        key: 'details',
+                        trigger: scope => scope.action('getDetails', scope, {
+                            id: scope.row.id,
+                        }),
                     }],
                 },
                 actions: {
@@ -851,6 +859,17 @@ export default {
                             });
                             // 响应数据必须返回
                             return res;
+                        },
+                    },
+                    // 查看详情列表
+                    getDetails: {
+                        // 使用表格展示
+                        table: {
+                            actions: {
+                                select: {
+                                    method: 'getDetails',
+                                },
+                            },
                         },
                     },
                 },
