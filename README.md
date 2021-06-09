@@ -866,9 +866,11 @@ export default {
                     getDetails: {
                         // 使用表格展示
                         table: {
-                            actions: {
-                                select: {
-                                    method: 'getDetails',
+                            options: {
+                                actions: {
+                                    select: {
+                                        method: 'getDetails',
+                                    },
                                 },
                             },
                         },
@@ -880,5 +882,58 @@ export default {
 };
 </script>
 ```
+
+##### tablex 事件
+
+<table>
+	<theader>
+		<tr>
+			<th>事件名</th>
+			<th>说明</th>
+			<th>参数</th>
+			<th>参数说明</th>
+		</tr>
+	</theader>
+	<tbody>
+		<tr>
+			<td>action</td>
+			<td>当 tablex 有 action 执行时触发</td>
+			<td>name</td>
+			<td>行为名称</td>
+		</tr>
+		<tr>
+			<td rowspan="3">close</td>
+			<td rowspan="3">当前组件窗口被销毁</td>
+			<td>tablex</td>
+			<td>当前 tablex</td>
+		</tr>
+		<tr>
+			<td>name</td>
+			<td>行为名称</td>
+		</tr>
+		<tr>
+			<td>params</td>
+			<td>多个参数，根据实际情况获取</td>
+		</tr>
+		<tr>
+			<td>condition-cLose</td>
+			<td>-</td>
+			<td>-</td>
+			<td>-</td>
+		</tr>
+		<tr>
+			<td>selection-change</td>
+			<td>当前表格选择的数据发生变化</td>
+			<td>value</td>
+			<td>当前选择数据集合</td>
+		</tr>
+		<tr>
+			<td>XXX</td>
+			<td>XXX</td>
+			<td>XXX</td>
+			<td>XXX</td>
+		</tr>
+	</tbody>
+</table>
 
 ----
