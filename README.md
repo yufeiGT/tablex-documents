@@ -962,7 +962,7 @@ export default {
 		</tr>
 		<tr>
 			<td>form-${key}</td>
-			<td rowspan="2">自定义弹窗表单项内容</td>
+			<td rowspan="2">自定义弹窗表单项内容，多个弹窗时存在相同 key 的项可以使用 actionName 区分</td>
 		</tr>
 		<tr>
 			<td>${actionName}-from-${key}</td>
