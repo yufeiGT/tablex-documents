@@ -930,4 +930,60 @@ export default {
 	</tbody>
 </table>
 
+##### 插槽
+
+<table>
+	<theader>
+		<tr>
+			<td>插槽名</td>
+			<td>说明</td>
+		</tr>
+	</theader>
+	<tbody>
+		<tr>
+			<td>default</td>
+			<td>拓展操作栏内容</td>
+		</tr>
+		<tr>
+			<td>insert</td>
+			<td>自定义新增操作按钮内容</td>
+		</tr>
+		<tr>
+			<td>delete</td>
+			<td>自定义多选删除操作按钮内容</td>
+		</tr>
+		<tr>
+			<td>column-${key}</td>
+			<td>自定义表格列的内容</td>
+		</tr>
+		<tr>
+			<td>operation-${key}</td>
+			<td>自定义表格操作列的内容</td>
+		</tr>
+		<tr>
+			<td>form-${key}</td>
+			<td rowspan="2">自定义弹窗表单项内容</td>
+		</tr>
+		<tr>
+			<td>${actionName}-from-${key}</td>
+		</tr>
+		<tr>
+			<td>${actionName}-dialog-footer</td>
+			<td>拓展弹窗底部内容</td>
+		</tr>
+		<tr>
+			<td>${actionName}-dialog-footer-cancel</td>
+			<td>自定义弹窗底部取消按钮内容</td>
+		</tr>
+		<tr>
+			<td>${actionName}-dialog-footer-confirm</td>
+			<td>自定义弹窗底部确认按钮内容</td>
+		</tr>
+		<tr>
+			<td>table-${actionName}</td>
+			<td>自定义弹窗的嵌套 tablex 内容</td>
+		</tr>
+	</tbody>
+</table>
+
 ----
