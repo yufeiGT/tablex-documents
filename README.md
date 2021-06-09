@@ -785,6 +785,7 @@ export default {
 ##### tablex.Action 配置
 
 > tablex 所有的交互都是围绕 action 开展的，通过 action 驱动增删改查及各种操作
+
 > tablex 内置了四种常用的 action ：
 
 * select （查询）select 是 tablex 表格的数据来源
