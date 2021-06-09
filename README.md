@@ -489,7 +489,7 @@ export default {
 </script>
 ```
 
-##### tablex 组件配置(options 属性)
+##### tablex 组件配置 tablex.Options (options 属性)
 
 |配置名|类型|默认值|说明|
 |:-|:-|:-|:-|
@@ -736,8 +736,129 @@ export default {
 
 ##### tablex.Operation 配置
 
+|配置名|类型|默认值|说明|
+|:-|:-|:-|:-|
+|key|String|-|操作唯一的键，可以通过 operation-${key} 使用插槽|
+|label|String|-|操作显示的文本内容，使用插槽时无效|
+|trigger|Function|-|点击时触发的回调。使用插槽时无效，需自定义交互|
+
+* 示例
+
+```html
+<template>
+    <el-tablex :options="options">
+        <!-- 使用插槽 -->
+        <el-button slot="operation-delete" slot-scope="scope" @click="deleteRow(scope)" type="danger" icon="el-icon-delete-solid" circle></el-button>
+    </el-tablex>
+</template>
+<script>
+export default {
+    computed: {
+        options() {
+            return {
+                operation: {
+                    list: [{
+                        key: 'edit',
+                        label: '修改',
+                        trigger: scope => {
+                            // 通过 scope.row 可以获取当前操作的数据
+                        },
+                    }， {
+                        // 使用插槽
+                        key: 'delete',
+                    }],
+                },
+            };
+        },
+    },
+    methods: {
+        deleteRow(scope) {
+            // 通过 scope.row 可以获取当前操作的数据
+        },
+    },
+};
+</script>
+```
+
 ----
 
 ##### tablex.Action 配置
+
+> tablex 所有的交互都是围绕 action 开展的，通过 action 驱动增删改查及各种操作
+> tablex 内置了四种常用的 action ：
+
+* select （查询）select 是 tablex 表格的数据来源
+* insert （新增）
+* edit （修改）
+* delete （删除）
+
+|配置名|类型|默认值|说明|
+|:-|:-|:-|:-|
+|method|String/Function|-|此行为调用的服务端接口或自定义回调函数，必要参数，不填报错|
+|params|Object|null|调用时附带的参数|
+|before|Function|-|调用前请求参数格式化回调|
+|after|Function|-|调用后响应数据格式化回调|
+|editor|Object|-|表单弹窗配置|
+|editor.customClass|String|-|自定义弹窗类名|
+|editor.title|String|-|弹窗标题|
+|editor.width|String|-|弹窗宽度，px 或 %|
+|editor.props|Object|-|弹窗组件配置，同 el-dialog|
+|editor.labelWidth|String|-|表单标签宽度，px 或 %|
+|editor.model|Object(tablex.Model)|-|表单数据模型|
+|editor.sendParams|Array[String]|-|定义发送参数列表|
+|table|Object|-|表格弹窗配置|
+|table.customClass|String|-|自定义弹窗类名|
+|table.title|String|-|弹窗标题|
+|table.width|String|-|弹窗宽度，px 或 %|
+|table.props|Object|-|弹窗组件配置，同 el-dialog|
+|table.options|Object(tablex.Options)|-|tablex 配置选项|
+|table.on|Object|-|事件绑定|
+
+* 示例
+
+```html
+<template>
+    <el-tablex :options="options"></el-tablex>
+</template>
+<script>
+import axios from 'axios';
+
+export default {
+    computed: {
+        options() {
+            return {
+                operation: {
+                    list: [{
+                        // 更新状态操作按钮
+                        key: 'status',
+                        trigger: scope => scope.action('updateStatus', scope, scope.row.id),
+                    }],
+                },
+                actions: {
+                    // 查询数据
+                    select: {
+                        // 此接口为注册 tablex 时由全局配置 request.map 传入
+                        method: 'getData',
+                    },
+                    // 自定义 action
+                    // 更新状态
+                    updateStatus: {
+                        // 使用自定义回调
+                        method: async (params, scope) => {
+                            // 自定义请求
+                            const res = await axios.post('http://XXXX/updateStatus', {
+                                params,
+                            });
+                            // 响应数据必须返回
+                            return res;
+                        },
+                    },
+                },
+            };
+        },
+    },
+};
+</script>
+```
 
 ----
