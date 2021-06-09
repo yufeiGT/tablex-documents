@@ -916,8 +916,8 @@ export default {
 			<td>多个参数，根据实际情况获取</td>
 		</tr>
 		<tr>
-			<td>condition-cLose</td>
-			<td>-</td>
+			<td>condition-close</td>
+			<td>条件查询被关闭时触发</td>
 			<td>-</td>
 			<td>-</td>
 		</tr>
@@ -926,12 +926,6 @@ export default {
 			<td>当前表格选择的数据发生变化</td>
 			<td>value</td>
 			<td>当前选择数据集合</td>
-		</tr>
-		<tr>
-			<td>XXX</td>
-			<td>XXX</td>
-			<td>XXX</td>
-			<td>XXX</td>
 		</tr>
 	</tbody>
 </table>
