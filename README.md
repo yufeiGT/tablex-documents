@@ -166,7 +166,7 @@ Vue.use(tablex, {
 }
 ```
 
-* 例子
+* 示例
 
 ```javascript
 import tablex from '@~crazy/tablex';
