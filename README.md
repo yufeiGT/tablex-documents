@@ -741,6 +741,7 @@ export default {
 |key|String|-|操作唯一的键，可以通过 operation-${key} 使用插槽|
 |label|String|-|操作显示的文本内容，使用插槽时无效|
 |trigger|Function|-|点击时触发的回调。使用插槽时无效，需自定义交互|
+|visible|Boolean/Function|true|是否显示此操作，回调中可获取到当前数据用于逻辑判断|
 
 * 示例
 
@@ -985,5 +986,214 @@ export default {
 		</tr>
 	</tbody>
 </table>
+
+##### 完整示例
+
+* main.js
+
+```javascript
+import 'babel-polyfill';
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+import store from './store'
+import VueI18n from 'vue-i18n';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+import tablex from '@~crazy/tablex';
+
+Vue.use(VueI18n);
+Vue.use(ElementUI, {
+    size: 'mini',
+});
+
+const i18n = new VueI18n({
+    locale: 'zh-cn',
+    silentTranslationWarn: true,
+    messages: {
+        'zh-cn': {},
+        en: {},
+    },
+});
+
+Vue.use(tablex, {
+    i18n,
+    request: {
+        map: {
+            getApiList: 'get',
+            getApiData: 'get',
+        },
+        axios: {
+            defaults: {
+                baseURL: 'https://crazy-gt.com/crazy-api/',
+            },
+        },
+    },
+    table: {
+        responseFormat: res => {
+            return {
+                ...res,
+                total: res.total || res.data.length,
+            };
+        },
+    },
+});
+
+Vue.config.productionTip = false
+
+new Vue({
+    router,
+    store,
+    i18n,
+    render: h => h(App)
+}).$mount('#app')
+```
+
+* app.vue
+
+```html
+<template>
+    <el-tablex :options="options">
+        <!-- 自定义数据源内容 -->
+        <el-tag v-if="scope.row.data_source" slot="column-data_source" slot-scope="scope">{{scope.row.data_source}}</el-tag>
+        <!-- 自定义是否为列表内容 -->
+        <el-tag slot="column-is_list" slot-scope="scope" :type="scope.row.is_list ? 'success' : 'danger'">{{scope.row.is_list}}</el-tag>
+        <!-- 自定义嵌套 tablex 内容 -->
+        <el-tablex slot="table-details" slot-scope="scope" :options="scope.options" :tablex="scope.tablex">
+            <div slot="column-content" slot-scope="scope" class="column-content">{{scope.row.content}}</div>
+        </el-tablex>
+        <el-tablex slot="table-list" slot-scope="scope" :options="scope.options" :tablex="scope.tablex">
+            <!-- 自定义数据源内容 -->
+            <el-tag v-if="scope.row.data_source" slot="column-data_source" slot-scope="scope">{{scope.row.data_source}}</el-tag>
+            <!-- 自定义是否为列表内容 -->
+            <el-tag slot="column-is_list" slot-scope="scope" :type="scope.row.is_list ? 'success' : 'danger'">{{scope.row.is_list}}</el-tag>
+        </el-tablex>
+    </el-tablex>
+</template>
+<script>
+export default {
+    computed: {
+        model() {
+            return {
+                id: {},
+                no: {
+                    label: '编号',
+                },
+                name: {
+                    label: '名称',
+                },
+                data_source: {
+                    label: '数据源',
+                },
+                is_list: {
+                    type: 'Radio',
+                    label: '是否为列表',
+                    data: [
+                        [{
+                            label: '否',
+                            value: false,
+                        }, {
+                            label: '是',
+                            value: true,
+                        }],
+                    ],
+                },
+            };
+        },
+        options() {
+            return {
+                multiple: true,
+                model: this.model,
+                operation: {
+                    list: [{
+                        key: 'details',
+                        label: '查看详情',
+                        trigger: scope => scope._self.action('details', scope, scope.row),
+                        visible: scope => !scope.row.is_list,
+                    }, {
+                        key: 'list',
+                        label: '列表详情',
+                        trigger: scope => scope._self.action('list', scope, scope.row),
+                        visible: scope => scope.row.is_list,
+                    }],
+                },
+                actions: {
+                    select: {
+                        // 使用回调函数自定义数据
+                        method: async ({
+                            page,
+                            size,
+                        }) => {
+                            const {
+                                data,
+                            } = await this.$tablex.api.getApiList().send();
+                            return {
+                                data: [...data].splice((page - 1) * size, size),
+                                total: data.length,
+                            };
+                        },
+                    },
+                    list: {
+                        table: {
+                            title: '列表详情',
+                            options: {
+                                model: this.model,
+                                actions: {
+                                    select: {
+                                        method: params => ({
+                                            data: params.list,
+                                        }),
+                                    },
+                                },
+                                paging: {
+                                    visible: false,
+                                },
+                            },
+                        },
+                    },
+                    details: {
+                        // 嵌套的 tablex
+                        table: {
+                            title: '查看详情',
+                            options: {
+                                model: {
+                                    no: {
+                                        label: '编号',
+                                    },
+                                    type: {
+                                        label: '类型',
+                                    },
+                                    content: {
+                                        label: '数据内容',
+                                    },
+                                },
+                                actions: {
+                                    select: {
+                                        method: 'getApiData',
+                                        sendParams: ['id'],
+                                    },
+                                },
+                                paging: {
+                                    visible: false,
+                                },
+                            },
+                        },
+                    },
+                },
+            };
+        },
+    },
+}
+</script>
+<style lang="scss">
+.column-content {
+    background: #333;
+    color: #FFF;
+    padding: 10px;
+    border-radius: 4px;
+
+}
+</style>
+```
 
 ----
