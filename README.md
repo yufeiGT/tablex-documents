@@ -604,7 +604,15 @@ export default {
             <td>-</td>
             <td>所有</td>
             <td>所有</td>
-            <td>同对应的数据类型所对应的 element-ui 组件</td>
+            <td>同对应的数据类型所对应的 element-ui 组件配置以及 el-table-column 配置</td>
+        </tr>
+        <tr>
+            <td>props.value</td>
+            <td>Any</td>
+            <td>-</td>
+            <td>所有</td>
+            <td>所有</td>
+            <td>数据值，可与 editOpts.watch 配合使用</td>
         </tr>
         <tr>
             <td>visible</td>
