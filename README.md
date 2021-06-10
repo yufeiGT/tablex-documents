@@ -1196,4 +1196,10 @@ export default {
 </style>
 ```
 
+![列表](https://crazy-gt.com/github/images/tablex-demo/list.png)
+
+![查看详情](https://crazy-gt.com/github/images/tablex-demo/list-details.png)
+
+![列表详情](https://crazy-gt.com/github/images/tablex-demo/list-list.png)
+
 ----
